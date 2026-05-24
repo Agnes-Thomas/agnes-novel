@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 });
 
 router.put('/', requireAuth, (req, res) => {
-  const allowed = ['novel_title','author_name','description','genre','cover_url','site_url','twitter_handle'];
+  const allowed = ['novel_title','author_name','description','genre','cover_url','site_url','twitter_handle','bmac_username'];
   const updates = {};
   for (const k of allowed) if (k in req.body) updates[k] = req.body[k];
   res.json(db.setSettings(updates));
