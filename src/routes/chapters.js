@@ -46,15 +46,15 @@ router.get('/', requireAuth, (req, res) => {
 // ── Admin – create ──────────────────────────────────
 router.post('/', requireAuth, (req, res) => {
   const { title, number, content_html = '', excerpt = '', meta_desc = '', keywords = '', status = 'draft' } = req.body;
-  if (!title || !number) return res.status(400).json({ error: 'title and number are required' });
+  if (!title) return res.status(400).json({ error: 'title is required' });
 
-  let slug = makeSlug(number, title);
+  let slug = makeSlug(number || 0, title);
   if (db.slugExists(slug)) slug = slug + '-' + Date.now();
 
   const ch = {
     id: randomUUID(),
     slug, title,
-    number: parseInt(number),
+    number: parseInt(number) || 0,
     content_html, excerpt, meta_desc, keywords, status,
     word_count: wordCount(content_html),
     created_at: new Date().toISOString(),
@@ -73,11 +73,11 @@ router.put('/:id', requireAuth, (req, res) => {
     excerpt = existing.excerpt, meta_desc = existing.meta_desc,
     keywords = existing.keywords, status = existing.status } = req.body;
 
-  let slug = makeSlug(number, title);
+  let slug = makeSlug(number || 0, title);
   if (db.slugExists(slug, req.params.id)) slug = slug + '-' + Date.now();
 
   const updated = db.updateChapter(req.params.id, {
-    title, number: parseInt(number), slug,
+    title, number: parseInt(number) || 0, slug,
     content_html, excerpt, meta_desc, keywords, status,
     word_count: wordCount(content_html),
   });
