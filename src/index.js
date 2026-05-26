@@ -2,7 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import authRouter    from './routes/auth.js';
+import authRouter     from './routes/auth.js';
 import chaptersRouter from './routes/chapters.js';
 import settingsRouter from './routes/settings.js';
 import readersRouter  from './routes/readers.js';
