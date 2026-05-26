@@ -139,4 +139,33 @@ const db = {
   },
   getChapterBySlug(slug, pubOnly = false) {
     const { chapters } = load();
-    return chapters.find(c => c.slug === slug && (!pubOnly || c.status === 'publishe
+    return chapters.find(c => c.slug === slug && (!pubOnly || c.status === 'published')) || null;
+  },
+  getChapterById(id) { return load().chapters.find(c => c.id === id) || null; },
+  createChapter(ch) { const d = load(); d.chapters.push(ch); save(d); return ch; },
+  updateChapter(id, upd) {
+    const d = load();
+    const i = d.chapters.findIndex(c => c.id === id);
+    if (i === -1) return null;
+    d.chapters[i] = { ...d.chapters[i], ...upd, updated_at: new Date().toISOString() };
+    save(d); return d.chapters[i];
+  },
+  deleteChapter(id) {
+    const d = load(); d.chapters = d.chapters.filter(c => c.id !== id); save(d);
+  },
+  slugExists(slug, excludeId = null) {
+    return load().chapters.some(c => c.slug === slug && c.id !== excludeId);
+  },
+  getReaderByEmail(email) { return load().readers.find(r => r.email === email) || null; },
+  getReaderById(id) { return load().readers.find(r => r.id === id) || null; },
+  createReader(reader) { const d = load(); d.readers.push(reader); save(d); return reader; },
+  updateReader(id, upd) {
+    const d = load();
+    const i = d.readers.findIndex(r => r.id === id);
+    if (i === -1) return null;
+    d.readers[i] = { ...d.readers[i], ...upd };
+    save(d); return d.readers[i];
+  },
+};
+
+export default db;
